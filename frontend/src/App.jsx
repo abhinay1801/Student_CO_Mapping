@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginSignup from "./components/LoginSignup";
 import DetailsEntry from "./components/DetailsEntry";
-import SetEntry from "./components/SetEntry"; // Assuming this is the SetEntry component
+import SetEntry from "./components/SetEntry";
 import TableEntry from "./components/TableEntry";
 
 const App = () => {

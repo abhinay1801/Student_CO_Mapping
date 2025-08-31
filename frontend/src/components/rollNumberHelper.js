@@ -40,12 +40,10 @@ export const generateRollNumbers = (academicYear, branch, section) => {
     let index = num - 100;
     let k=0;
 
-    // Case 1: Handling A0-Z9 (100-259)
     if (index < 260) {
       let firstLetter = String.fromCharCode(65 + Math.floor(index / 10));
       let secondDigit = index % 10;
 
-      // Skip "I" and "O" Series
       if (firstLetter >= "I") firstLetter = String.fromCharCode(firstLetter.charCodeAt(0) + 1);
       if (firstLetter >= "O") firstLetter = String.fromCharCode(firstLetter.charCodeAt(0) + 1);
       if(firstLetter<="Z")
@@ -55,18 +53,16 @@ export const generateRollNumbers = (academicYear, branch, section) => {
 
     }
     index+=20
-    // Case 2: Handling AA, AB, ..., ZZ (After Z9)
-    index -= 260; // Adjust index to start AA from 260
+    index -= 260;
 
     let firstLetterIndex = Math.floor(index / 24);
     let secondLetterIndex = index % 24;
 
-    // Skip "I" and "O" in double-letter sequence
-    firstLetterIndex += firstLetterIndex >= 8 ? 1 : 0; // Skip "I"
-    firstLetterIndex += firstLetterIndex >= 14 ? 1 : 0; // Skip "O"
+    firstLetterIndex += firstLetterIndex >= 8 ? 1 : 0;
+    firstLetterIndex += firstLetterIndex >= 14 ? 1 : 0;
 
-    secondLetterIndex += secondLetterIndex >= 8 ? 1 : 0; // Skip "I"
-    secondLetterIndex += secondLetterIndex >= 14 ? 1 : 0; // Skip "O"
+    secondLetterIndex += secondLetterIndex >= 8 ? 1 : 0;
+    secondLetterIndex += secondLetterIndex >= 14 ? 1 : 0;
 
     return `${String.fromCharCode(65 + firstLetterIndex)}${String.fromCharCode(65 + secondLetterIndex)}`;
   };

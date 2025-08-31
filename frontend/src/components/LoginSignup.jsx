@@ -13,8 +13,8 @@ const LoginSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
-    setLoading(true); // Disable button during the request
+    setError("");
+    setLoading(true);
 
     const url = isSignup
       ? "http://localhost:5000/api/auth/signup"
@@ -25,24 +25,19 @@ const LoginSignup = () => {
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-
-        // if (isSignup && response.data.isFirstTime) {
           navigate("/setentry");
-        // } else {
-        //   navigate("/detailsentry");
-        // }
       }
     } catch (error) {
       if (error.response?.status === 401) {
         setError("Incorrect email or password. Please try again.");
       } else if (error.response?.data?.message) {
-        setError(error.response.data.message); // Show detailed backend validation message
+        setError(error.response.data.message);
       } else {
         setError("An error occurred. Please try again later.");
       }
       console.error("Error during login/signup:", error.response?.data || error);
     } finally {
-      setLoading(false); // Re-enable button after the request
+      setLoading(false);
     }
   };
 
@@ -73,7 +68,7 @@ const LoginSignup = () => {
           <div>
             <label className="block text-gray-700 font-medium">Password</label>
             <input
-              type={showPassword ? "text" : "password"} // Toggle password visibility
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -81,16 +76,15 @@ const LoginSignup = () => {
             />
           </div>
 
-          {/* Show checkbox only when the password length is greater than 0 */}
           {password.length > 0 && (
             <div className="flex items-center mt-2">
               <input
                 type="checkbox"
-                checked={showPassword} // Bind checkbox to showPassword state
-                onChange={() => setShowPassword((prev) => !prev)} // Toggle password visibility when checked
+                checked={showPassword} 
+                onChange={() => setShowPassword((prev) => !prev)}
                 id="showPassword"
                 className="text-blue-500 focus:ring-2 focus:ring-blue-500"
-                style={{ pointerEvents: 'auto' }} // Ensure the checkbox is clickable
+                style={{ pointerEvents: 'auto' }}
               />
               <label htmlFor="showPassword" className="text-sm text-gray-700 ml-2">
                 Show password

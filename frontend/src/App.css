@@ -4,11 +4,11 @@
   }
   
   @page {
-    size: A4 portrait; /* Or use 'landscape' if needed */
-    margin: 10mm; /* Adjust margins */
+    size: A4 portrait;
+    margin: 10mm;
   }
 
   body {
-    zoom: 50%; /* This helps mimic scale reduction */
+    zoom: 50%;
   }
 }

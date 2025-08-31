@@ -2,7 +2,7 @@ const argon2 = require("argon2");
 const validator = require("validator");
 const { pwnedPassword } = require("hibp");
 
-// Validate password strength
+
 const validatePassword = async (password) => {
   const isStrong = validator.isStrongPassword(password, {
     minLength: 8,
@@ -24,12 +24,10 @@ const validatePassword = async (password) => {
   }
 };
 
-// Hash password
 const hashPassword = async (password) => {
   return await argon2.hash(password);
 };
 
-// Verify password
 const verifyPassword = async (hash, password) => {
   return await argon2.verify(hash, password);
 };

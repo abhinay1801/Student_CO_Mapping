@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
 
-// Password validation function
 const validatePassword = (password) => {
   const errors = [];
 
@@ -31,7 +30,6 @@ const validatePassword = (password) => {
   return errors;
 };
 
-// Sign Up
 router.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
@@ -60,7 +58,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 

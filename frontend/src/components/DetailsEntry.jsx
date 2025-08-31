@@ -3,9 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function DetailsEntry() {
   const location = useLocation();
-  const {
-    subject=""
-  } = location.state || {};
+  const { subject="" } = location.state || {};
   const [selectBranch, setSelectBranch] = useState("Select Branch");
   const [selectYear, setSelectYear] = useState("Select Year");
   const [selectSection, setSelectSection] = useState("Select Section");
@@ -78,7 +76,6 @@ function DetailsEntry() {
     <div className="bg-gray-300 flex justify-center items-center min-h-screen px-4">
       <div className="max-w-5xl w-full bg-purple-400 flex flex-col rounded-xl p-6 m-5 items-center shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {/* First row with Academic Year and Exam Month */}
           <div className="flex flex-col items-center w-full">
             <h1 className="text-white text-lg mb-2 text-center">Select Academic Year</h1>
             <input
@@ -101,7 +98,7 @@ function DetailsEntry() {
             />
           </div>
 
-          {/* Second row */}
+          
           <div className="flex flex-col items-center w-full">
             <h1 className="text-white text-lg mb-2 text-center">Select Year</h1>
             <select
@@ -130,7 +127,7 @@ function DetailsEntry() {
             </select>
           </div>
 
-          {/* Third row with Date of Examination, Max Marks, Regulation */}
+          
           <div className="flex flex-col items-center w-full">
             <h1 className="text-white text-lg mb-2 text-center">Date of Examination</h1>
             <input
@@ -164,7 +161,7 @@ function DetailsEntry() {
             />
           </div>
 
-          {/* Remaining fields (Branch, Section, Lab Name, etc.) */}
+          
           <div className="flex flex-col items-center w-full">
             <h1 className="text-white text-lg mb-2 text-center">Select Branch</h1>
             <select
