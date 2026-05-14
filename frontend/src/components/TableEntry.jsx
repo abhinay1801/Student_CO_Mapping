@@ -252,12 +252,12 @@ function TableEntry() {
     <div className="p-3 min-h-screen bg-gray-100">
       <div className="max-w-6xl mx-auto bg-white p-2">
         <div className="flex justify-center items-center border w-full h-23">
-          <div className="text-center border-r w-[820px] h-full">
+          <div className="text-center border-r w-205 h-full">
             <h1 className="text-2xl font-bold font-serif ">CVR COLLEGE OF ENGINEERING</h1>
             <p className="text-lg font-semibold font-serif">An UGC Autonomous Institution Affiliated to JNTUH</p>
             <p className="text-sm font-semibold font-serif">Vastunagar, Mangalpally (V), Ibrahimpatnam (M), Ranga Reddy District - 501510</p>
           </div>
-          <div className="flex flex-col justify-center items-center w-[180px] h-full">
+          <div className="flex flex-col justify-center items-center w-45 h-full">
             <h1 className="text-center text-xl font-bold font-serif">College Code</h1>
             <h1 className="text-2xl font-bold font-serif ">B8</h1>
           </div>
@@ -390,7 +390,7 @@ function TableEntry() {
                     />
                   </td>
                   <td className="border border-gray-300 p-1 text-center">{rollNumber}</td>
-                  <td className="border border-gray-300 p-1 w-40 min-w-[160px] max-w-[160px] break-words">
+                  <td className="border border-gray-300 p-1 w-40 min-w-40 max-w-40 wrap-break-word">
                     {setDetails[rollNumber]?.program1?.join(", ") || "-"}
                   </td>
                   <td className="border border-gray-300 p-1">
@@ -420,7 +420,7 @@ function TableEntry() {
                       onChange={(e) => handleMarksChange(rollNumber, "execution", e.target.value)}
                     />
                   </td>
-                  <td className="border border-gray-300 p-1 w-40 min-w-[160px] max-w-[160px] break-words">
+                  <td className="border border-gray-300 p-1 w-40 min-w-40 max-w-40 wrap-break-word">
                     {setDetails[rollNumber]?.program2?.join(", ") || "-"}
                   </td>
                   <td className="border border-gray-300 p-1">
