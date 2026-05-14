@@ -1,32 +1,45 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const connectDB = require("./config/db");
 const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const setRoutes = require('./routes/setRoutes');
 
+dotenv.config();
+
+// Connect Database
+connectDB();
+
 
 const app = express();
-dotenv.config();
+
+
 
 app.use(cors()); 
 app.use(bodyParser.json()); 
 
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected successfully');
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
+
+
+app.use('/auth', authRoutes); 
+app.use('/sets', setRoutes);
+
+
+
+app.get("/", (req, res) => {
+  res.send("API Running");
+});
+
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route Not Found"
   });
-
-
-app.use('/api/auth', authRoutes); 
-app.use('/api/sets', setRoutes);
-
+});
 
 const PORT = process.env.PORT || 5000;
 

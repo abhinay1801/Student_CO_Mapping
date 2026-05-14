@@ -19,7 +19,9 @@ function DetailsEntry() {
   const navigate = useNavigate();
 
   const getSections = (branch) => {
-    switch (branch) {
+
+    switch(branch)
+    {
       case "CSE":
         return ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       case "CSM":
@@ -30,7 +32,6 @@ function DetailsEntry() {
       case "ECE":
         return ["A", "B"];  
       case "AIDS" :
-        return ["A"];
       case "AIML" :
         return ["A"];
       default:
@@ -45,10 +46,11 @@ function DetailsEntry() {
 
   const handleSubmit = () => {
   
-    if (
+    if(
       academicYear && selectBranch !== "Select Branch" && selectSection !== "Select Section" && examMonth && semester !== "Select Semester" &&
       selectYear !== "Select Year" && labName && externalExaminer && internalExaminer && examDate && maxMarks && regulation
-    ) {
+    )
+    {
       navigate("/tableentry", { 
         state: { 
           academicYear, 
@@ -66,7 +68,10 @@ function DetailsEntry() {
           subject:subject
         } 
       });
-    } else {
+    }
+    else
+    {
+      alert('Form validation failed.');
       console.log('Form validation failed.');
     }
   };

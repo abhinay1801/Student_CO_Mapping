@@ -3,9 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
-  const [isSignup, setIsSignup] = useState(true);
+  const [isSignup, setIsSignup] = useState(true); // Track whether the user is in signup or login mode
   const [error, setError] = useState(""); // Store login errors
   const [loading, setLoading] = useState(false); // Track loading state
   const [showPassword, setShowPassword] = useState(false); // Track password visibility
@@ -16,29 +16,43 @@ const LoginSignup = () => {
     setError("");
     setLoading(true);
 
-    const url = isSignup
-      ? "http://localhost:5000/api/auth/signup"
-      : "http://localhost:5000/api/auth/login";
+    const url = isSignup ? "http://localhost:5000/auth/signup" : "http://localhost:5000/auth/login";
 
-    try {
+    try
+    {
       const response = await axios.post(url, { email, password });
-
-      if (response.data.token) {
+      console.log(isSignup ? "Signup successful:" : "Login successful:", response.data);
+      if (response.data.token)
+        {
         localStorage.setItem("token", response.data.token);
-          navigate("/setentry");
+        navigate("/setentry");
       }
-    } catch (error) {
-      if (error.response?.status === 401) {
+
+    }
+    catch(error)
+    {
+
+      //Unauthorized user
+      if(error.response?.status === 401)
+      {
         setError("Incorrect email or password. Please try again.");
-      } else if (error.response?.data?.message) {
+      }
+      else if(error.response?.data?.message)
+      {
         setError(error.response.data.message);
-      } else {
+      } 
+      else
+      {
         setError("An error occurred. Please try again later.");
       }
-      console.error("Error during login/signup:", error.response?.data || error);
-    } finally {
+
+      // console.error("Error during login/signup:", error.response?.data || error);
+    }
+    finally
+    {
       setLoading(false);
     }
+
   };
 
   return (
@@ -61,6 +75,7 @@ const LoginSignup = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
               required
               className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -71,6 +86,7 @@ const LoginSignup = () => {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete={isSignup ? "new-password" : "current-password"}
               required
               className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -80,7 +96,7 @@ const LoginSignup = () => {
             <div className="flex items-center mt-2">
               <input
                 type="checkbox"
-                checked={showPassword} 
+                checked={showPassword}
                 onChange={() => setShowPassword((prev) => !prev)}
                 id="showPassword"
                 className="text-blue-500 focus:ring-2 focus:ring-blue-500"

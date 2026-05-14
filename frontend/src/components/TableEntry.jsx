@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import "../App.css";
 
 function TableEntry() {
+
   const location = useLocation();
   const {
     academicYear = "",
@@ -23,41 +24,92 @@ function TableEntry() {
     subject = "",
   } = location.state || {};
 
-  if (!academicYear || !Branch || !Section) {
+  if(!academicYear || !Branch || !Section)
+  {
     return <h1 className="text-center text-xl mt-10">Invalid Data</h1>;
   }
 
   const [rollNumbers, setRollNumbers] = useState(
     generateRollNumbers(academicYear, Branch, Section)
   );
-  const [newRollNumber, setNewRollNumber] = useState("");
-  const [setNumbers, setSetNumbers] = useState({});
-  const [marks, setMarks] = useState({});
+  const [newRollNumber, setNewRollNumber] = useState(""); // store roll Numbers
+  const [setNumbers, setSetNumbers] = useState({}); // stores roll Number -> set Number mapping
+  const [marks, setMarks] = useState({}); // stores roll Number -> {writeUp, compileErrors, execution, programSyntax, vivaVoice} mapping
   const [setDetails, setSetDetails] = useState({});
 
+  /**
+   * Structure : 
+     
+     rollNumbers = [rollNumber1, rollNumber2, ...]
+
+      setNumbers = {
+        rollNumber1: setNumber1,
+        rollNumber2: setNumber2,
+        ...
+      }
+
+      marks = {
+        rollNumber1: {
+          writeUp: value,
+          ....
+        },
+        ....
+      }
+
+      setDetails = {
+        rollNumber1: {
+          program1: [...], 
+          program2: [...],
+          co1: [...],
+          co2: [...],
+        },
+        ...
+      }
+      
+   */
+
+
+
+  //Manually add student row
   const handleAddRow = () => {
-    if (newRollNumber && !rollNumbers.includes(newRollNumber)) {
+    if(newRollNumber && !rollNumbers.includes(newRollNumber))
+    {
       setRollNumbers((prev) => [...prev, newRollNumber]);
       setNewRollNumber("");
     }
   };
 
+
+
+
+  //Delete student row
   const handleDeleteRow = (rollNumber) => {
+
+    // Remove the roll number from the list
     setRollNumbers((prev) => prev.filter((item) => item !== rollNumber));
-    const updatedSetNumbers = { ...setNumbers };
+
+    // Remove associated set number with the roll number
+    const updatedSetNumbers = {...setNumbers};
     delete updatedSetNumbers[rollNumber];
     setSetNumbers(updatedSetNumbers);
 
-    const updatedMarks = { ...marks };
+    // Remove associated marks with the roll number
+    const updatedMarks = {...marks};
     delete updatedMarks[rollNumber];
     setMarks(updatedMarks);
 
-    const updatedSetDetails = { ...setDetails };
+    // Remove associated set details with the roll number
+    const updatedSetDetails = {...setDetails};
     delete updatedSetDetails[rollNumber];
     setSetDetails(updatedSetDetails);
+
   };
 
+
   const handleMarksChange = (rollNumber, field, value) => {
+
+    //update the marks for the specific field for a particular student identified by roll number
+
     setMarks((prev) => ({
       ...prev,
       [rollNumber]: {
@@ -67,16 +119,19 @@ function TableEntry() {
     }));
   };
 
+
+  //Stores fetched question mapping per student.
   const fetchSetDetailsDebounced = debounce(async (setNum, rollNumber) => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if(!token)
+    {
       alert("You are not authenticated. Please login.");
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/sets/fetchSets?subject=${subject}`,
+        `http://localhost:5000/sets/fetchSets?subject=${subject}`,
         {
           method: "GET",
           headers: {
@@ -86,12 +141,15 @@ function TableEntry() {
         }
       );
 
-      if (response.ok) {
+      if(response.ok)
+      {
         const data = await response.json();
         const setData = data.sets[setNum - 1];
 
-        if (setData) {
-          const dividedQuestions = {
+        if(setData)
+        {
+          const dividedQuestions =
+          {
             program1: setData.questions?.slice(0, setData.questions.length / 2),
             program2: setData.questions?.slice(setData.questions.length / 2),
             co1: setData.coNumbers?.slice(0, setData.coNumbers.length / 2),
@@ -102,34 +160,48 @@ function TableEntry() {
             ...prev,
             [rollNumber]: dividedQuestions,
           }));
-        } else {
+        }
+
+        else
+        {
           alert("Set number not found.");
         }
-      } else {
+      }
+      else
+      {
         alert("No set details found.");
       }
-    } catch (error) {
+    }
+    catch(error)
+    {
       console.error("Error fetching set details:", error);
     }
   }, 500);
 
+
+
   useEffect(() => {
+
+    // object into an array of key-value pairs
     Object.entries(setNumbers).forEach(([rollNumber, setNum]) => {
       if (setNum) fetchSetDetailsDebounced(setNum, rollNumber);
     });
   }, [setNumbers]);
 
+
+  //handle change in set number of a studdent and fetch the corresponding question details
   const handleSetNumberChange = (rollNumber, value) => {
     setSetNumbers((prev) => {
       const updatedSetNumbers = { ...prev, [rollNumber]: value };
-      if (value) {
+      if(value)
+      {
         fetchSetDetailsDebounced(value, rollNumber);
       }
-
       return updatedSetNumbers;
     });
   };
 
+  // calculate total marks for a student 
   const calculateTotalMarks = (rollNumber) => {
     const studentMarks = marks[rollNumber] || {};
     const writeUp = parseInt(studentMarks.writeUp) || 0;
@@ -161,10 +233,19 @@ function TableEntry() {
       "Total Marks (60M)": calculateTotalMarks(rollNumber),
     }));
 
+
+    // JSON -> Excel worksheet
     const ws = XLSX.utils.json_to_sheet(data);
+
+    // Excel worksheet -> Excel workbook
     const wb = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(wb, ws, "Marks Data");
+
+    // Download the workbook as an Excel file
     XLSX.writeFile(wb, "marksheet.xlsx");
+
   };
 
   return (
@@ -309,7 +390,7 @@ function TableEntry() {
                     />
                   </td>
                   <td className="border border-gray-300 p-1 text-center">{rollNumber}</td>
-                  <td className="border border-gray-300 p-1">
+                  <td className="border border-gray-300 p-1 w-40 min-w-[160px] max-w-[160px] break-words">
                     {setDetails[rollNumber]?.program1?.join(", ") || "-"}
                   </td>
                   <td className="border border-gray-300 p-1">
@@ -339,7 +420,7 @@ function TableEntry() {
                       onChange={(e) => handleMarksChange(rollNumber, "execution", e.target.value)}
                     />
                   </td>
-                  <td className="border border-gray-300 p-1">
+                  <td className="border border-gray-300 p-1 w-40 min-w-[160px] max-w-[160px] break-words">
                     {setDetails[rollNumber]?.program2?.join(", ") || "-"}
                   </td>
                   <td className="border border-gray-300 p-1">
